@@ -28,6 +28,8 @@ govukApplications:
         requests:
           cpu: 10m
           memory: 256Mi
+      uploadAssets:
+        enabled: false
       ingress:
         enabled: true
         annotations:
