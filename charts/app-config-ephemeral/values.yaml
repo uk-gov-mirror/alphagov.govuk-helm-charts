@@ -30,12 +30,14 @@ govukApplications:
       ingress:
         enabled: true
         annotations:
-          <<: [*alb-ingress-defaults, *alb-ingress-waf-ruleset-www]
+          alb.ingress.kubernetes.io/scheme: internet-facing
+          alb.ingress.kubernetes.io/target-type: ip
+          alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+          alb.ingress.kubernetes.io/ssl-redirect: "443"
+          alb.ingress.kubernetes.io/healthcheck-path: /readyz
           alb.ingress.kubernetes.io/load-balancer-name: assets-origin
           alb.ingress.kubernetes.io/group.name: assets-origin
           alb.ingress.kubernetes.io/group.order: "30"
-          alb.ingress.kubernetes.io/load-balancer-attributes: *assets-lb-attributes
-          alb.ingress.kubernetes.io/conditions.{{ .Release.Name }}: *assets-lb-conditions
         hosts:
           - name: assets-origin.{{ .Values.k8sExternalDomainSuffix }}
             path: /
