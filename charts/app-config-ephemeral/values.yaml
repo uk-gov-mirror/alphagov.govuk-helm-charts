@@ -15,6 +15,7 @@ iamRoleServiceAccounts:
     iamRoleArn:
 
 awsRegion: eu-west-1
+k8sExternalDomainSuffix: eks.eph-jfharden-2025-08-05.ephemeral.govuk.digital
 externalDomainSuffix: eph-jfharden-2025-08-05.ephemeral.govuk.digital
 publishingDomainSuffix: eph-jfharden-2025-08-05.ephemeral.govuk.digital
 assetsDomain: assets.eph-jfharden-2025-08-05.ephemeral.govuk.digital
