@@ -15,73 +15,74 @@ iamRoleServiceAccounts:
     iamRoleArn:
 
 awsRegion: eu-west-1
-externalDomainSuffix: "{{ .Values.clusterId }}.{{ .Values.govukEnvironment }}.govuk.digital"
-publishingDomainSuffix: {{ .Values.externalDomainSuffix }}
-assetsDomain: assets.{{ .Values.externalDomainSuffix }}
-cspReportURI: https://csp-reporter.{{ .Values.externalDomainSuffix }}/report
+externalDomainSuffix: eph-jfharden-2025-08-05.ephemeral.govuk.digital
+publishingDomainSuffix: eph-jfharden-2025-08-05.ephemeral.govuk.digital
+assetsDomain: assets.eph-jfharden-2025-08-05.ephemeral.govuk.digital
+cspReportURI: https://csp-reporter.eph-jfharden-2025-08-05.ephemeral.govuk.digital/report
+k8sExternalDomainSuffix: eks.eph-jfharden-2025-08-05.ephemeral.govuk.digital
 
-emergency-banner-redis:
-  - &emergency-banner-redis redis://whitehall-admin-redis:6379/1
-
-govukApplications:
-  - name: static
-    helmValues:
-      arch: arm64
-      appResources:
-        limits:
-          cpu: 1
-          memory: 1Gi
-        requests:
-          cpu: 10m
-          memory: 256Mi
-      uploadAssets:
-        enabled: false
-      ingress:
-        enabled: true
-        annotations:
-          alb.ingress.kubernetes.io/scheme: internet-facing
-          alb.ingress.kubernetes.io/target-type: ip
-          alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-          alb.ingress.kubernetes.io/ssl-redirect: "443"
-          alb.ingress.kubernetes.io/healthcheck-path: /readyz
-          alb.ingress.kubernetes.io/load-balancer-name: assets-origin
-          alb.ingress.kubernetes.io/group.name: assets-origin
-          alb.ingress.kubernetes.io/group.order: "30"
-        hosts:
-          - name: assets-origin.{{ .Values.k8sExternalDomainSuffix }}
-            path: /
-      extraEnv:
-        # These GA/GTM values are not secrets (not even the the gtm_auth one).
-        # https://github.com/alphagov/govuk-puppet/pull/8041
-        - name: RAILS_SERVE_STATIC_FILES
-          value: "true"
-        - name: GA_UNIVERSAL_ID
-          value: "PurposefullyBroken"
-        - name: GOOGLE_TAG_MANAGER_ID
-          value: "PurposefullyBroken"
-        - name: GOOGLE_TAG_MANAGER_AUTH  # Non-prod only.
-          value: "PurposefullyBroken"
-        - name: GOOGLE_TAG_MANAGER_PREVIEW  # Non-prod only.
-          value: "PurposefullyBroken"
-        - name: PUBLISHING_API_BEARER_TOKEN
-          value: "PurposefullyBroken"
-        - name: EMERGENCY_BANNER_REDIS_URL
-          value: *emergency-banner-redis
-        - name: USE_TMPDIR_PAGE_CACHE
-          value: "true"
-      nginxConfigMap:
-        extraServerConf: |
-          # 1stline use this URL in their zendesk template
-          location = /static/gov.uk_logotype_crown.png {
-            absolute_redirect off;
-            return 301 /media/5c810ef4ed915d43e50ce260/gov.uk_logotype_crown.png;
-          }
-          # Google site verification
-          location = /googlec908b3bc32386239.html {
-            return 200 'google-site-verification: googlec908b3bc32386239.html';
-          }
-          # Favicon now that static isn't serving it
-          location = /favicon.ico {
-            return 301 https://www.integration.publishing.service.gov.uk/favicon.ico;
-          }
-
+#### emergency-banner-redis:
+####   - &emergency-banner-redis redis://whitehall-admin-redis:6379/1
+#### 
+#### govukApplications:
+####   - name: static
+####     helmValues:
+####       arch: arm64
+####       appResources:
+####         limits:
+####           cpu: 1
+####           memory: 1Gi
+####         requests:
+####           cpu: 10m
+####           memory: 256Mi
+####       uploadAssets:
+####         enabled: false
+####       ingress:
+####         enabled: true
+####         annotations:
+####           alb.ingress.kubernetes.io/scheme: internet-facing
+####           alb.ingress.kubernetes.io/target-type: ip
+####           alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+####           alb.ingress.kubernetes.io/ssl-redirect: "443"
+####           alb.ingress.kubernetes.io/healthcheck-path: /readyz
+####           alb.ingress.kubernetes.io/load-balancer-name: assets-origin
+####           alb.ingress.kubernetes.io/group.name: assets-origin
+####           alb.ingress.kubernetes.io/group.order: "30"
+####         hosts:
+####           - name: assets-origin.{{ .Values.k8sExternalDomainSuffix }}
+####             path: /
+####       extraEnv:
+####         # These GA/GTM values are not secrets (not even the the gtm_auth one).
+####         # https://github.com/alphagov/govuk-puppet/pull/8041
+####         - name: RAILS_SERVE_STATIC_FILES
+####           value: "true"
+####         - name: GA_UNIVERSAL_ID
+####           value: "PurposefullyBroken"
+####         - name: GOOGLE_TAG_MANAGER_ID
+####           value: "PurposefullyBroken"
+####         - name: GOOGLE_TAG_MANAGER_AUTH  # Non-prod only.
+####           value: "PurposefullyBroken"
+####         - name: GOOGLE_TAG_MANAGER_PREVIEW  # Non-prod only.
+####           value: "PurposefullyBroken"
+####         - name: PUBLISHING_API_BEARER_TOKEN
+####           value: "PurposefullyBroken"
+####         - name: EMERGENCY_BANNER_REDIS_URL
+####           value: *emergency-banner-redis
+####         - name: USE_TMPDIR_PAGE_CACHE
+####           value: "true"
+####       nginxConfigMap:
+####         extraServerConf: |
+####           # 1stline use this URL in their zendesk template
+####           location = /static/gov.uk_logotype_crown.png {
+####             absolute_redirect off;
+####             return 301 /media/5c810ef4ed915d43e50ce260/gov.uk_logotype_crown.png;
+####           }
+####           # Google site verification
+####           location = /googlec908b3bc32386239.html {
+####             return 200 'google-site-verification: googlec908b3bc32386239.html';
+####           }
+####           # Favicon now that static isn't serving it
+####           location = /favicon.ico {
+####             return 301 https://www.integration.publishing.service.gov.uk/favicon.ico;
+####           }
+#### 
