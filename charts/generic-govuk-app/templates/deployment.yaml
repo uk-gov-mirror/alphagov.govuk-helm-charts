@@ -133,7 +133,9 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 30
           startupProbe:
-            httpGet: *app-probe
+            httpGet:
+              path: /healthcheck/ready
+              port: http
             failureThreshold: 15
             periodSeconds: 2
             timeoutSeconds: 2
