@@ -23,7 +23,7 @@ cspReportURI: https://csp-reporter.eph-jfharden-2025-08-05.ephemeral.govuk.digit
 k8sExternalDomainSuffix: eks.eph-jfharden-2025-08-05.ephemeral.govuk.digital
 
 emergency-banner-redis:
-  - &emergency-banner-redis redis://whitehall-admin-redis:6379/1
+  - &emergency-banner-redis redis://whitehall-admin-redis-master:6379/1
 
 govukApplications:
   - name: static
